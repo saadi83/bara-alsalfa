@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>برة السالفة</title>
+
+<style>
+body{
+font-family:Arial;
+background:#f5f5f5;
+padding:20px;
+}
+
+.container{
+max-width:600px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:15px;
+}
+
+input,textarea,button{
+width:100%;
+padding:10px;
+margin:10px 0;
+font-size:18px;
+}
+
+button{
+background:#2563eb;
+color:white;
+border:none;
+border-radius:8px;
+}
+
+.hidden{
+display:none;
+}
+
+.card{
+padding:20px;
+background:#eee;
+text-align:center;
+font-size:28px;
+border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div id="setup">
+
+<h1>🎭 لعبة برة السالفة</h1>
+
+<input id="count" type="number" placeholder="عدد اللاعبين">
+
+<textarea id="names" rows="8"
+placeholder="اسم في كل سطر"></textarea>
+
+<input id="outsiders" type="number"
+placeholder="عدد برة السالفة">
+
+<input id="topic" type="text"
+placeholder="الموضوع">
+
+<button onclick="startGame()">
+ابدأ اللعبة
+</button>
+
+</div>
+
+<div id="game" class="hidden">
+
+<h2 id="player"></h2>
+
+<div class="card" id="result">
+اضغط عرض
+</div>
+
+<button onclick="showRole()">
+عرض
+</button>
+
+<button onclick="nextPlayer()">
+التالي
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+let players=[];
+let current=0;
+let outsiders=[];
+let topic="";
+
+function startGame(){
+
+players=document
+.getElementById("names")
+.value
+.split("\n")
+.filter(x=>x.trim()!="");
+
+let count=parseInt(
+document.getElementById("count").value
+);
+
+let outsiderCount=parseInt(
+document.getElementById("outsiders").value
+);
+
+topic=document
+.getElementById("topic")
+.value;
+
+if(players.length!==count){
+alert("عدد الأسماء لا يساوي عدد اللاعبين");
+return;
+}
+
+outsiders=[];
+
+while(outsiders.length<outsiderCount){
+
+let r=Math.floor(
+Math.random()*count
+);
+
+if(!outsiders.includes(r)){
+outsiders.push(r);
+}
+}
+
+document
+.getElementById("setup")
+.classList.add("hidden");
+
+document
+.getElementById("game")
+.classList.remove("hidden");
+
+updatePlayer();
+}
+
+function updatePlayer(){
+
+document
+.getElementById("player")
+.innerHTML=
+"اللاعب: "+players[current];
+
+document
+.getElementById("result")
+.innerHTML=
+"اضغط عرض";
+}
+
+function showRole(){
+
+if(outsiders.includes(current)){
+
+document
+.getElementById("result")
+.innerHTML=
+"🚨 أنت برة السالفة";
+
+}else{
+
+document
+.getElementById("result")
+.innerHTML=
+topic;
+
+}
+
+}
+
+function nextPlayer(){
+
+current++;
+
+if(current>=players.length){
+
+document.body.innerHTML=
+"<h1 style='text-align:center'>🎉 انتهت الجولة</h1>";
+
+return;
+}
+
+updatePlayer();
+}
+
+</script>
+
+</body>
+</html>
